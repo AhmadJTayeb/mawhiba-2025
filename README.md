@@ -44,7 +44,7 @@ Welcome to the repository for the **Data Analysis & Collection Workshop**, a han
    ✔️ This is where you’ll write and run your code.
 
 3. **Install Required Libraries**  
-   Run this in the terminal or PyCharm:\n
+   Run this in the terminal or PyCharm:
    ```bash
    pip install pandas matplotlib plotly playwright
    playwright install
