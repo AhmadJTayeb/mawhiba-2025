@@ -1,6 +1,6 @@
 # 📊 Data Analysis & Collection – 5-Day Python Workshop for Gifted Students
 
-Welcome to the repository for the **Data Analysis & Collection Workshop**, a hands-on 5-day journey into Python programming, data scraping, analysis, and visualization — designed for high school students with a passion for data and technology.
+Welcome to the repository for the **Data Analysis & Collection Workshop**, a hands-on 5-day journey into Python programming, data scraping, analysis, and visualization — designed specifically for high school students with a passion for data and technology.
 
 ---
 
@@ -44,7 +44,7 @@ Welcome to the repository for the **Data Analysis & Collection Workshop**, a han
    ✔️ This is where you’ll write and run your code.
 
 3. **Install Required Libraries**  
-   Run this in the terminal or PyCharm:
+   Run this in the terminal or PyCharm:\n
    ```bash
    pip install pandas matplotlib plotly playwright
    playwright install

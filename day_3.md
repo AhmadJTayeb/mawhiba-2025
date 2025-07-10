@@ -261,6 +261,385 @@ print(df)
 
 ---
 
+### 🔄 7. Combining DataFrames (Merging & Concatenating)
+
+In real projects, you often need to combine data from multiple sources.
+
+#### Sample Data for Examples:
+
+**customers.csv:**
+```
+customer_id,name,city
+1,Mohammed,Riyadh
+2,Fatima,Jeddah
+3,Abdullah,Dammam
+4,Aisha,Riyadh
+```
+
+**orders.csv:**
+```
+order_id,customer_id,product,amount
+101,1,Laptop,2500
+102,2,Phone,800
+103,1,Mouse,50
+104,3,Keyboard,120
+105,5,Tablet,600
+```
+
+**products_info.csv:**
+```
+product,category,supplier
+Laptop,Electronics,TechCorp
+Phone,Electronics,MobilePlus
+Mouse,Accessories,TechCorp
+Keyboard,Accessories,InputMaster
+Tablet,Electronics,TabletPro
+```
+
+#### Loading the Data:
+```python
+customers = pd.read_csv("customers.csv")
+orders = pd.read_csv("orders.csv")
+products_info = pd.read_csv("products_info.csv")
+```
+
+#### Merging DataFrames (Like SQL JOIN):
+```python
+# Inner Join - only matching records
+customer_orders = customers.merge(orders, on='customer_id')
+print(customer_orders)
+
+# Left Join - keep all customers, even without orders
+all_customers = customers.merge(orders, on='customer_id', how='left')
+print(all_customers)
+
+# Join with different column names
+orders_with_products = orders.merge(products_info, 
+                                  left_on='product', 
+                                  right_on='product')
+```
+
+#### Concatenating DataFrames:
+```python
+# Sample data for concatenation
+new_customers = pd.DataFrame({
+    'customer_id': [5, 6],
+    'name': ['Sara', 'Ali'],
+    'city': ['Mecca', 'Medina']
+})
+
+# Stack vertically (add new rows)
+all_customers = pd.concat([customers, new_customers], ignore_index=True)
+
+# Side by side (add new columns) - rarely used
+# combined = pd.concat([df1, df2], axis=1)
+```
+
+---
+
+### 🔧 8. Advanced Data Manipulation
+
+#### Applying Custom Functions:
+
+**Sample Sales Data:**
+```python
+sales_data = pd.DataFrame({
+    'product': ['iPhone', 'Samsung Galaxy', 'iPad', 'MacBook'],
+    'price_usd': [999, 850, 599, 1299],
+    'quantity': [50, 75, 30, 20],
+    'discount_percent': [5, 10, 0, 15]
+})
+```
+
+#### Using Apply for Calculations:
+```python
+# Calculate price in SAR (1 USD = 3.75 SAR)
+sales_data['price_sar'] = sales_data['price_usd'].apply(lambda x: x * 3.75)
+
+# Calculate total revenue per product (Using apply with axis=1)
+# axis=1 means apply the function to each ROW (across columns)
+# axis=0 would mean apply to each COLUMN (down rows)
+sales_data['revenue'] = sales_data.apply(
+    lambda row: row['price_usd'] * row['quantity'] * (1 - row['discount_percent']/100),
+    axis=1
+)
+
+# Alternative methods to calculate revenue:
+
+# Method 1: Vectorized operations (FASTEST - recommended)
+sales_data['revenue_v1'] = sales_data['price_usd'] * sales_data['quantity'] * (1 - sales_data['discount_percent']/100)
+
+# Method 2: Using eval (good for complex expressions)
+sales_data['revenue_v2'] = sales_data.eval('price_usd * quantity * (1 - discount_percent/100)')
+
+# Method 3: Using a loop (SLOWEST - avoid for large datasets)
+revenue_list = []
+for index, row in sales_data.iterrows():
+    revenue = row['price_usd'] * row['quantity'] * (1 - row['discount_percent']/100)
+    revenue_list.append(revenue)
+sales_data['revenue_v3'] = revenue_list
+
+# Performance comparison:
+# Vectorized (Method 1) > eval (Method 2) > apply (original) > loop (Method 3)
+# For large datasets, always prefer vectorized operations!
+
+# Categorize products by price
+def price_category(price):
+    if price < 600:
+        return 'Budget'
+    elif price < 1000:
+        return 'Mid-range'
+    else:
+        return 'Premium'
+
+sales_data['category'] = sales_data['price_usd'].apply(price_category)
+```
+
+#### String Operations:
+```python
+# Sample customer data with messy names
+messy_customers = pd.DataFrame({
+    'name': ['  MOHAMMED BIN SALMAN  ', 'fatima abdullah', 'KHALID-IBRAHIM', 'aisha_mohammed'],
+    'email': ['mohammed@email.com', 'FATIMA@EMAIL.COM', 'khalid@email.com', 'aisha@email.com']
+})
+
+# Clean and standardize
+messy_customers['name_clean'] = messy_customers['name'].str.strip().str.title()
+messy_customers['email_clean'] = messy_customers['email'].str.lower()
+messy_customers['first_name'] = messy_customers['name_clean'].str.split().str[0]
+
+# Check for specific patterns
+messy_customers['has_underscore'] = messy_customers['name'].str.contains('_')
+```
+
+#### Map Values for Quick Transformations:
+```python
+# Convert categories to codes
+category_mapping = {'Budget': 'B', 'Mid-range': 'M', 'Premium': 'P'}
+sales_data['category_code'] = sales_data['category'].map(category_mapping)
+```
+
+---
+
+### 🧹 9. Data Quality & Validation
+
+#### Handling Duplicates:
+
+**Sample Data with Duplicates:**
+```python
+student_grades = pd.DataFrame({
+    'student_id': [1, 2, 3, 2, 4, 3, 5],
+    'name': ['Abdullah', 'Fatima', 'Khalid', 'Fatima', 'Aisha', 'Khalid', 'Sara'],
+    'subject': ['Math', 'Science', 'Math', 'Science', 'Math', 'Math', 'Science'],
+    'grade': [85, 92, 78, 92, 88, 78, 95]
+})
+```
+
+#### Finding and Removing Duplicates:
+```python
+# Check for duplicates
+print("Duplicate rows:")
+print(student_grades.duplicated())
+
+# Count duplicates
+print(f"Number of duplicates: {student_grades.duplicated().sum()}")
+
+# Remove exact duplicates
+clean_grades = student_grades.drop_duplicates()
+
+# Remove duplicates based on specific columns
+unique_students = student_grades.drop_duplicates(subset=['student_id', 'subject'])
+
+# Keep last occurrence instead of first
+latest_grades = student_grades.drop_duplicates(subset=['student_id', 'subject'], 
+                                             keep='last')
+```
+
+#### Data Validation:
+```python
+# Check data quality
+print("Data Overview:")
+print(f"Shape: {student_grades.shape}")
+print(f"Missing values: {student_grades.isnull().sum()}")
+print(f"Unique students: {student_grades['student_id'].nunique()}")
+
+# Validate grade ranges
+valid_grades = student_grades['grade'].between(0, 100).all()
+print(f"All grades valid (0-100): {valid_grades}")
+
+# Find outliers
+grade_stats = student_grades['grade'].describe()
+print("Grade statistics:")
+print(grade_stats)
+```
+
+---
+
+### 💾 10. Saving Your Work
+
+#### Export to Different Formats:
+```python
+# Save to CSV (most common)
+student_grades.to_csv('student_grades_clean.csv', index=False)
+
+# Save to Excel with multiple sheets
+with pd.ExcelWriter('school_data.xlsx') as writer:
+    student_grades.to_excel(writer, sheet_name='Grades', index=False)
+    sales_data.to_excel(writer, sheet_name='Sales', index=False)
+
+# Save to JSON
+student_grades.to_json('grades.json', orient='records', indent=2)
+
+# Save only specific columns
+student_grades[['name', 'subject', 'grade']].to_csv('summary.csv', index=False)
+
+# Save with custom settings
+student_grades.to_csv('grades_formatted.csv', 
+                     index=False, 
+                     sep=';',  # Use semicolon separator
+                     encoding='utf-8')
+```
+
+---
+
+### 🔍 11. Advanced Filtering & Querying
+
+#### Using Query Method (SQL-like):
+```python
+# Sample inventory data
+inventory = pd.DataFrame({
+    'item': ['Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Tablet', 'Phone'],
+    'price': [2500, 50, 120, 800, 600, 1200],
+    'stock': [15, 100, 45, 25, 30, 60],
+    'category': ['Electronics', 'Accessories', 'Accessories', 'Electronics', 'Electronics', 'Electronics'],
+    'supplier': ['TechCorp', 'TechCorp', 'InputMaster', 'DisplayPro', 'TabletPro', 'MobilePlus']
+})
+
+# Query examples
+expensive_items = inventory.query('price > 500 and stock > 20')
+tech_accessories = inventory.query('category == "Accessories" and supplier == "TechCorp"')
+
+# Using isin for multiple values
+electronics = inventory[inventory['supplier'].isin(['TechCorp', 'MobilePlus'])]
+
+# Combine with string operations
+cheap_electronics = inventory.query('price < 1000 and category == "Electronics"')
+```
+
+---
+
+### 📅 12. Working with Dates
+
+#### Sample Sales Data with Dates:
+```python
+sales_timeline = pd.DataFrame({
+    'date': ['2024-01-15', '2024-02-20', '2024-03-10', '2024-01-25', '2024-02-14'],
+    'product': ['Laptop', 'Phone', 'Tablet', 'Mouse', 'Keyboard'],
+    'amount': [2500, 1200, 600, 50, 120],
+    'customer': ['Mohammed', 'Fatima', 'Abdullah', 'Aisha', 'Sara']
+})
+
+# Convert to datetime
+sales_timeline['date'] = pd.to_datetime(sales_timeline['date'])
+
+# Extract date components
+sales_timeline['year'] = sales_timeline['date'].dt.year
+sales_timeline['month'] = sales_timeline['date'].dt.month
+sales_timeline['day_name'] = sales_timeline['date'].dt.day_name()
+
+# Filter by date ranges
+jan_sales = sales_timeline[sales_timeline['date'].dt.month == 1]
+recent_sales = sales_timeline[sales_timeline['date'] >= '2024-02-01']
+
+# Group by month
+monthly_sales = sales_timeline.groupby(sales_timeline['date'].dt.month)['amount'].sum()
+```
+
+---
+
+### 🚨 13. Error Handling & Best Practices
+
+#### Common Error Prevention:
+```python
+# Check if file exists before reading
+import os
+if os.path.exists('data.csv'):
+    df = pd.read_csv('data.csv')
+else:
+    print("File not found!")
+
+# Check if column exists before using
+if 'price' in inventory.columns:
+    avg_price = inventory['price'].mean()
+    print(f"Average price: {avg_price}")
+else:
+    print("Price column not found!")
+
+# Handle division by zero
+def safe_profit_margin(price, cost):
+    if cost == 0:
+        return 0
+    return (price - cost) / price * 100
+
+# Memory usage check for large datasets
+print("Memory usage:")
+print(inventory.memory_usage(deep=True))
+```
+
+#### Performance Tips:
+```python
+# Use vectorized operations instead of loops
+# BAD: slow loop
+# for i in range(len(df)):
+#     df.loc[i, 'new_col'] = df.loc[i, 'price'] * 1.1
+
+# GOOD: vectorized operation
+inventory['price_with_tax'] = inventory['price'] * 1.1
+
+# Use query for complex filtering (often faster)
+result = inventory.query('price > 500 and stock < 50')
+```
+
+---
+
+### ✏️ Advanced Mini Exercises
+
+**Complete these exercises using the sample data provided above:**
+
+1. **Data Combination:**
+   - Merge customers with orders to show customer names with their order amounts
+   - Find customers who haven't placed any orders (hint: use left join)
+
+2. **String Manipulation:**
+   - Clean the messy customer names and extract first names
+   - Create email usernames from email addresses (part before @)
+
+3. **Duplicate Management:**
+   - Find students who have duplicate grades in the same subject
+   - Keep only the highest grade for each student-subject combination
+
+4. **Advanced Filtering:**
+   - Use query to find electronics under 1000 SAR with stock above 20
+   - Find all products from suppliers containing "Tech" in the name
+
+5. **Date Analysis:**
+   - Calculate total sales per month from the sales timeline
+   - Find the day of the week with highest sales
+
+6. **Data Export Challenge:**
+   - Create an Excel file with 3 sheets: Customers, Orders, and Summary
+   - Export only profitable products (price > 100) to a CSV
+
+7. **Custom Functions:**
+   - Create a function to categorize stock levels (Low: <20, Medium: 20-50, High: >50)
+   - Apply it to create a new stock_level column
+
+8. **Data Validation:**
+   - Check if all prices are positive numbers
+   - Identify any products with suspicious data (price = 0 or negative stock)
+
+---
+
 ### ✅ Summary
 
 * Pandas makes it easy to load, inspect, filter, and clean data
