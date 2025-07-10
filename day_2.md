@@ -32,7 +32,7 @@ Web scraping is a powerful tool, but it comes with serious **ethical** and **leg
 
 * Websites often have a `robots.txt` file (e.g., `https://example.com/robots.txt`) that specifies which parts of the site can or cannot be accessed by automated bots—including scrapers.
 * **Respecting `robots.txt`**: Always check this file before scraping. If it disallows certain paths, do not scrape those sections.
-* **How to check**: Just add `/robots.txt` to the site’s URL (e.g., `https://books.toscrape.com/robots.txt`) and read the rules.
+* **How to check**: Just add `/robots.txt` to the site’s URL (e.g., `https://google.com/robots.txt`) and read the rules.
 * **Example of a `robots.txt` rule:**
 
   ```
@@ -186,11 +186,83 @@ You will use these classes (like `product-name` and `price`) to find the data.
 
 ---
 
+### 🎨 2.1 What is CSS?
+
+**CSS** (Cascading Style Sheets) is the language that makes websites look beautiful. While HTML structures the content, CSS controls:
+
+* **Colors** and **fonts**
+* **Layout** and **spacing** 
+* **Styling** of elements
+
+**CSS Selectors** are patterns used to find and style specific elements on a webpage. We use these same selectors in web scraping to target the data we want.
+
+**Example CSS:**
+```css
+.product-name {
+    color: blue;
+    font-size: 18px;
+}
+.price {
+    color: green;
+    font-weight: bold;
+}
+```
+
+---
+
+### ⚡ 2.2 What is JavaScript?
+
+**JavaScript** is a programming language that makes websites interactive and dynamic. It can:
+
+* **Load content** after the page loads
+* **Update information** without refreshing the page
+* **Respond to user actions** (clicks, form submissions)
+
+**Why this matters for scraping:** Some websites use JavaScript to load product data, prices, or other information after the initial page loads. This means the data might not be available immediately when the page first opens.
+
+---
+
+### 🎯 2.3 CSS Selectors for Web Scraping
+
+CSS selectors help you target specific elements on a webpage:
+
+* `.class-name` - Selects elements with a specific class
+* `#id-name` - Selects element with a specific ID  
+* `tag-name` - Selects all elements of that type
+* `parent > child` - Selects direct child elements
+* `[attribute="value"]` - Selects by attribute
+
+**Example:** `.product-name` finds all elements with class="product-name"
+
+---
+
+### ⏳ 2.4 Handling JavaScript-Rendered Content
+
+Some websites load content using JavaScript after the page loads. If your selectors don't work:
+
+* Use `page.wait_for_selector(".element")` to wait for content
+* Try `page.wait_for_load_state("networkidle")` for dynamic pages
+* Add small delays with `time.sleep(2)` for simple cases
+
+---
+
 ### 🔍 3. Using Developer Tools
 
+**What are Developer Tools?** Developer Tools are built-in browser features that let you "see behind the scenes" of any website. They show you the HTML structure, CSS styles, and JavaScript code that make up the webpage.
+
+**Why do we need them for scraping?** Before you can scrape data, you need to know:
+* What HTML elements contain the data you want
+* What CSS classes or IDs those elements have
+* How the page is structured
+
+**How to use them:**
+
 1. Right-click on a webpage and select **Inspect**
-2. Use the element picker tool to select parts of the page
+2. Use the element picker tool (🔍 icon) to select parts of the page
 3. Note the tag, class, or id of the element you want to extract
+4. Look at the highlighted HTML code to understand the structure
+
+**Pro tip:** The element picker tool is your best friend - it shows you exactly which HTML element corresponds to what you see on the page!
 
 ---
 
@@ -240,55 +312,71 @@ with sync_playwright() as p:
 
 ### 📄 6. Extracting Data from Web Pages
 
-There are several ways to find elements in a webpage using Playwright:
+Playwright provides powerful ways to find and extract data from web pages. We'll focus on the modern `page.locator()` method, which is more reliable and easier to use.
 
-* `page.query_selector(".class")` – Selects the first element with that class
-* `page.query_selector("#id")` – Selects element by ID
-* `page.query_selector("tag")` – Selects the first element with that tag name (e.g., `div`, `h2`)
-* `page.query_selector("div > span")` – Selects nested/child elements
-* `page.query_selector("[attribute='value']")` – Selects using attributes like `data-id`, `name`, etc.
-* `page.locator("selector")` – Recommended for modern usage (supports advanced actions like chaining, waiting, and bulk selection)
+#### 🎯 Understanding the Page Structure
 
-#### 🧠 Why Use `page.locator()`?
+First, let's look at a typical product page structure:
 
-`locator()` is Playwright's preferred method because it allows more robust interaction with elements, supports retries, and can perform advanced queries and actions.
-
-**Basic Example:**
-
-```python
-product_name = page.locator(".product-name").first
-print(product_name.inner_text())
+```html
+<div class="product">
+  <h2 class="product-name">iPhone 15</h2>
+  <span class="price">$999</span>
+  <div class="rating">⭐⭐⭐⭐⭐</div>
+</div>
+<div class="product">
+  <h2 class="product-name">Samsung Galaxy</h2>
+  <span class="price">$899</span>
+  <div class="rating">⭐⭐⭐⭐</div>
+</div>
 ```
 
-**Clicking a Button by Text:**
+#### 🔍 Using `page.locator()` (Recommended Method)
+
+`page.locator()` is the modern way to find elements. It's more reliable and supports advanced features:
+
+**Basic Selectors:**
+* `.class-name` – Selects elements with a specific class
+* `#id-name` – Selects element with a specific ID  
+* `tag-name` – Selects all elements of that type
+* `parent > child` – Selects direct child elements
+* `[attribute="value"]` – Selects by attribute
+
+**Examples:**
 
 ```python
-page.locator("text=Buy Now").click()
+# Get the first product name
+product_name = page.locator(".product-name").first
+print(product_name.inner_text())  # Output: iPhone 15
+
+# Get all product names
+all_names = page.locator(".product-name")
+print(all_names.count())  # Output: 2
+
+# Get specific product by index
+second_product = page.locator(".product-name").nth(1)
+print(second_product.inner_text())  # Output: Samsung Galaxy
 ```
 
 **Looping Through Multiple Elements:**
 
 ```python
-items = page.locator(".product")
-count = items.count()
+# Get all products
+products = page.locator(".product")
+count = products.count()
 
 for i in range(count):
-    name = items.nth(i).locator(".product-name").inner_text()
-    price = items.nth(i).locator(".price").inner_text()
-    print(name, price)
+    product = products.nth(i)
+    name = product.locator(".product-name").inner_text()
+    price = product.locator(".price").inner_text()
+    rating = product.locator(".rating").inner_text()
+    print(f"{name}: {price} - {rating}")
 ```
 
-`locator()` is especially powerful when dealing with dynamic or JavaScript-rendered pages.
-
-**Example:**
-
-```python
-products = page.query_selector_all(".product")
-
-for product in products:
-    name = product.query_selector(".product-name").inner_text()
-    price = product.query_selector(".price").inner_text()
-    print(name, price)
+**Output:**
+```
+iPhone 15: $999 - ⭐⭐⭐⭐⭐
+Samsung Galaxy: $899 - ⭐⭐⭐⭐
 ```
 
 ---
@@ -305,8 +393,8 @@ It allows your program to respond to errors gracefully instead of stopping compl
 
 ```python
 try:
-    name = product.query_selector(".product-name").inner_text()
-    price = product.query_selector(".price").inner_text()
+    name = product.locator(".product-name").inner_text()
+    price = product.locator(".price").inner_text()
     print(name, price)
 except Exception as e:
     print("Error extracting product info:", e)
@@ -336,17 +424,51 @@ print("Data saved to products.csv")
 
 ### 🔧 9. Common Issues and Fixes
 
-* **Elements not found?** Wait for page to load: `page.wait_for_selector()`
-* **Text extraction issues?** Try `.inner_text()` or `.get_attribute()`
-* **Pages loading slowly?** Use time delays (e.g., `time.sleep(2)`) for demos
+**Problem: "Element not found" error**
+```python
+# Solution: Wait for the element to appear
+page.wait_for_selector(".product-name")
+product = page.locator(".product-name").first
+```
+
+**Problem: Empty text when extracting**
+```python
+# Solution: Try different extraction methods
+text = element.inner_text()  # Gets visible text
+text = element.get_attribute("textContent")  # Gets all text including hidden
+text = element.text_content()  # Alternative method
+```
+
+**Problem: Page loads slowly**
+```python
+# Solution: Add waiting strategies
+page.wait_for_load_state("networkidle")  # Wait for network to be idle
+time.sleep(2)  # Simple delay (use sparingly)
+```
+
+**Problem: Selector not working**
+```python
+# Solution: Check the actual HTML structure
+# Use Developer Tools to verify the correct class/id names
+# Try different selectors: .class, #id, tag-name, etc.
+```
+
+**Problem: Browser closes too quickly**
+```python
+# Solution: Add a pause or keep browser open
+time.sleep(5)  # Pause for 5 seconds
+# OR
+input("Press Enter to close browser...")  # Wait for user input
+```
 
 ---
 
-### 🚀 10 Full Example: Scraping Quotes from Quotes to Scrape
+### 🚀 10. Full Example: Scraping Quotes from Quotes to Scrape
 
 ```python
 from playwright.sync_api import sync_playwright
 import pandas as pd
+import time
 
 # List to store scraped quotes
 results = []
@@ -371,7 +493,6 @@ with sync_playwright() as p:
     browser.close()
 
 # Convert to DataFrame and save
-
 df = pd.DataFrame(results)
 df.to_csv("quotes.csv", index=False)
 print("Scraped quotes saved to quotes.csv")
@@ -389,10 +510,39 @@ This example demonstrates:
 
 ### ✏️ Mini Exercises
 
-1. Use Playwright to open a webpage and print its title
-2. Scrape product names and prices from a mock HTML page
-3. Save the scraped data to a CSV file using `pandas`
-4. Calculate and display the average price of all products
+**Exercise 1: Basic Page Navigation**
+```python
+from playwright.sync_api import sync_playwright
+
+# Open https://quotes.toscrape.com/ and print the page title
+# Hint: Use page.title()
+```
+
+**Exercise 2: Extract Single Element**
+```python
+# From the same page, extract and print the first quote text
+# Hint: Use page.locator(".text").first.inner_text()
+```
+
+**Exercise 3: Extract Multiple Elements**
+```python
+# Extract all quote texts and authors, store them in a list
+# Hint: Use a loop with page.locator(".quote")
+```
+
+**Exercise 4: Save to CSV**
+```python
+import pandas as pd
+
+# Convert your extracted data to a DataFrame and save as "quotes.csv"
+# Hint: Use pd.DataFrame() and .to_csv()
+```
+
+**Exercise 5: Calculate Statistics**
+```python
+# Calculate and print the total number of quotes on the page
+# Hint: Use .count() method
+```
 
 ---
 
@@ -412,3 +562,24 @@ This example demonstrates:
 * `pandas` makes it easy to store data in CSV format
 
 Use this power responsibly — and enjoy building your first real data extractor!
+
+---
+
+### 📚 Glossary
+
+- **API (Application Programming Interface):** A way for programs to communicate and exchange data, often in a structured format like JSON.
+- **Attribute:** Extra information added to an HTML tag, such as class, id, or href.
+- **Class:** An HTML attribute used to group elements for styling or selection (e.g., class="product").
+- **CSS (Cascading Style Sheets):** The language used to style and layout web pages.
+- **CSS Selector:** A pattern used to select specific HTML elements (e.g., .product-name, #main, div > span).
+- **Headless:** Running a browser without a visible window (useful for automation).
+- **HTML (HyperText Markup Language):** The standard language for creating web pages and structuring content.
+- **ID:** An HTML attribute that uniquely identifies an element on a page (e.g., id="header").
+- **JavaScript:** A programming language that makes web pages interactive and dynamic.
+- **JSON (JavaScript Object Notation):** A lightweight data format often used for APIs.
+- **Locator:** A Playwright method for finding and interacting with elements on a web page.
+- **Pandas:** A Python library for data analysis and working with tables (DataFrames).
+- **Playwright:** A Python library for automating browsers and scraping web pages.
+- **Scraping:** Automatically extracting data from websites.
+- **Selector:** A pattern (like a CSS selector) used to find elements in HTML.
+- **Tag:** An HTML element, such as `div`, `span`, or `a`.

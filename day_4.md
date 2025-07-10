@@ -42,6 +42,8 @@ plt.ylabel('Price')
 plt.show()
 ```
 
+![Basic Bar Chart](./images/day4/1_basic_bar_chart.png)
+
 #### 2.2 Customizing Appearance
 ```python
 plt.bar(items, prices, color='skyblue')
@@ -61,6 +63,8 @@ plt.ylabel('Sales')
 plt.show()
 ```
 
+![Line Plot](./images/day4/2_line_plot.png)
+
 #### 2.4 Pie Chart
 ```python
 labels = ['Apple', 'Banana', 'Grape']
@@ -70,6 +74,8 @@ plt.pie(quantities, labels=labels, autopct='%1.1f%%')
 plt.title('Fruit Quantity Share')
 plt.show()
 ```
+
+![Pie Chart](./images/day4/3_pie_chart.png)
 
 #### 2.5 Histogram
 ```python
@@ -87,6 +93,8 @@ plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
 ```
+
+![Histogram](./images/day4/4_histogram.png)
 
 ---
 
@@ -108,6 +116,8 @@ df = pd.DataFrame(data)
 fig = px.bar(df, x='Item', y='Price', title='Fruit Prices')
 fig.show()
 ```
+
+![Plotly Bar Chart](./images/day4/5_plotly_bar_chart.png)
 
 #### 3.2 Line and Pie Charts
 ```python
@@ -193,6 +203,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+![Sales Trend](./images/day4/6_sales_trend.png)
+
 #### Bar Chart: Total Sales by Product
 ```python
 total_sales = df.drop(columns="Day").sum()
@@ -207,12 +219,16 @@ plt.tight_layout()
 plt.show()
 ```
 
+![Total Sales Bar](./images/day4/7_total_sales_bar.png)
+
 #### Pie Chart: Sales Share
 ```python
 plt.pie(total_sales, labels=total_sales.index, autopct="%1.1f%%", colors=["#ff9999", "#99ff99", "#9999ff"])
 plt.title("Sales Share by Product")
 plt.show()
 ```
+
+![Sales Share Pie](./images/day4/8_sales_share_pie.png)
 
 This project gives students practice with:
 - Realistic multi-variable data
@@ -257,6 +273,8 @@ plt.grid(axis='y')
 plt.show()
 ```
 
+![Market Price Comparison](./images/day4/9_market_comparison.png)
+
 #### Line Plot
 ```python
 plt.plot(df_prices["Item"], df_prices["Market A"], marker='o', label='Market A')
@@ -297,6 +315,8 @@ plt.grid(True)
 plt.show()
 ```
 
+![Practice Bar Chart](./images/day4/practice_1_bar_chart.png)
+
 **2. Line Chart: Weekly Spending**
 ```python
 days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon2", "Tue2", "Wed2", "Thu2", "Fri2", "Sat2", "Sun2"]
@@ -312,6 +332,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+![Practice Line Chart](./images/day4/practice_2_line_chart.png)
+
 **3. Pie Chart: Daily Activity Split**
 ```python
 labels = ["School", "Homework", "Free Time", "Chores", "Sleep"]
@@ -321,6 +343,8 @@ plt.pie(hours, labels=labels, autopct='%1.1f%%')
 plt.title("How I Spend My Day")
 plt.show()
 ```
+
+![Practice Pie Chart](./images/day4/practice_3_pie_chart.png)
 
 **4. Histogram: Exam Scores**
 ```python
@@ -332,6 +356,8 @@ plt.ylabel("Number of Students")
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
 ```
+
+![Practice Histogram](./images/day4/practice_4_histogram.png)
 
 #### 🧩 Plotly Extensions
 
@@ -349,6 +375,8 @@ fig = px.bar(df, x="Fruit", y="Price", title="Interactive Fruit Prices")
 fig.show()
 ```
 
+![Practice Plotly Bar](./images/day4/practice_5_plotly_bar.png)
+
 **6. Create an Interactive Line Plot**
 ```python
 import plotly.express as px
@@ -361,6 +389,8 @@ df_spend = pd.DataFrame({"Day": days, "Spending": spending})
 fig = px.line(df_spend, x="Day", y="Spending", title="2-Week Spending Trend")
 fig.show()
 ```
+
+![Practice Plotly Line](./images/day4/practice_6_plotly_line.png)
 
 ---
 
@@ -410,6 +440,8 @@ plt.grid(True, alpha=0.3)
 plt.show()
 ```
 
+![Scatter Plot](./images/day4/10_scatter_plot.png)
+
 ---
 
 ### 🎯 9. Subplots - Multiple Charts in One Figure
@@ -456,6 +488,8 @@ plt.tight_layout()
 plt.suptitle('Sales Performance Across Saudi Cities', y=1.02, fontsize=16)
 plt.show()
 ```
+
+![Subplots](./images/day4/11_subplots.png)
 
 #### Subplot with Different Chart Types:
 ```python
@@ -558,6 +592,8 @@ plt.grid(True, alpha=0.3)
 plt.show()
 ```
 
+![Box Plot](./images/day4/12_box_plot.png)
+
 #### Horizontal Box Plot:
 ```python
 plt.boxplot(score_values, tick_labels=['Math', 'Science', 'Arabic', 'English'], vert=False)
@@ -605,6 +641,8 @@ sns.heatmap(correlation_df, annot=True, cmap='coolwarm', center=0,
 plt.title('Subject Performance Correlation Matrix')
 plt.show()
 ```
+
+![Heatmap](./images/day4/13_heatmap.png)
 
 #### Store Sales Heatmap by Month and City:
 ```python
@@ -665,6 +703,8 @@ plt.ylabel('Revenue (SAR)')
 plt.show()
 ```
 
+![Pandas Line Plot](./images/day4/14_pandas_line.png)
+
 #### Individual Column Plots:
 ```python
 # Histogram of Riyadh branch revenue
@@ -719,6 +759,8 @@ plt.xlabel('Years of Experience')
 plt.ylabel('Salary (SAR)')
 plt.show()
 ```
+
+![Seaborn Scatter Plot](./images/day4/15_seaborn_scatter.png)
 
 #### Seaborn Box Plot by Category:
 ```python
@@ -791,6 +833,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+![Annotated Chart](./images/day4/16_annotated_chart.png)
+
 #### Multiple Y-axes Chart:
 ```python
 fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -853,6 +897,8 @@ plt.tight_layout()
 plt.show()
 ```
 
+![Time Series](./images/day4/17_time_series.png)
+
 #### Moving Average:
 ```python
 # Calculate 7-day moving average
@@ -872,6 +918,8 @@ plt.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 ```
+
+![Moving Average](./images/day4/18_moving_average.png)
 
 ---
 
@@ -911,6 +959,10 @@ business_data['profit_margin'] = (business_data['profit'] / business_data['reven
    - Annotations for key insights
 
 3. Export the dashboard as a high-resolution PNG
+
+**Example Dashboard Output:**
+
+![Comprehensive Dashboard](./images/day4/comprehensive_dashboard.png)
 
 ---
 
