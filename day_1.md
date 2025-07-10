@@ -39,8 +39,45 @@ Python is a versatile, high-level programming language known for readability and
 
 #### **Operators**
 
-* Arithmetic: `+`, `-`, `*`, `/`, `%` (modulo)
-* Comparison: `==`, `!=`, `>`, `<`, `>=`, `<=`
+* **Arithmetic:** `+`, `-`, `*`, `/`, `%` (modulo), `**` (exponentiation), `//` (floor division)
+* **Comparison:** `==`, `!=`, `>`, `<`, `>=`, `<=`
+* **Logical:** `and`, `or`, `not`
+* **Assignment:** `=`, `+=`, `-=`, `*=`, `/=`, `%=`, `**=`, `//=`
+* **Membership:** `in`, `not in`
+* **Identity:** `is`, `is not`
+
+```python
+# Examples
+x = 10
+y = 3
+
+print(x + y)    # 13
+print(x - y)    # 7
+print(x * y)    # 30
+print(x / y)    # 3.333...
+print(x % y)    # 1 (remainder)
+print(x ** y)   # 1000 (10^3)
+print(x // y)   # 3 (floor division)
+
+# Logical operators
+a = True
+b = False
+print(a and b)  # False
+print(a or b)   # True
+print(not a)    # False
+
+# Membership
+fruits = ["apple", "banana", "cherry"]
+print("apple" in fruits)      # True
+print("orange" not in fruits) # True
+
+# Identity
+x = [1, 2, 3]
+y = [1, 2, 3]
+z = x
+print(x is y)   # False (different objects)
+print(x is z)   # True (same object)
+```
 
 #### **Input & Output**
 
@@ -63,6 +100,29 @@ name = "Ahmad"
 age = 25
 print(f"Hello, {name}. You are {age} years old.")
 print(f"Next year you'll be {age + 1} years old.")
+```
+
+#### **String Methods and Slicing**
+
+```python
+text = "  Hello, World!  "
+
+# String methods
+print(text.upper())           # "  HELLO, WORLD!  "
+print(text.lower())           # "  hello, world!  "
+print(text.strip())           # "Hello, World!"
+print(text.replace("World", "Python"))  # "  Hello, Python!  "
+print(text.split(","))        # ["  Hello", " World!  "]
+print(len(text))              # 17
+
+# String slicing [start:end:step]
+message = "Python Programming"
+print(message[0:6])           # "Python"
+print(message[:6])            # "Python" (start from beginning)
+print(message[7:])            # "Programming" (to the end)
+print(message[::2])           # "Pto rgamn" (every 2nd character)
+print(message[::-1])          # "gnimmargorP nohtyP" (reverse)
+print(message[-3:])           # "ing" (last 3 characters)
 ```
 
 #### **.format() Method**
@@ -168,6 +228,15 @@ Loops repeat actions multiple times.
 ```python
 for fruit in fruits:
     print(fruit)
+
+# Using range() function
+for i in range(5):
+    print(i)  # Prints 0, 1, 2, 3, 4
+
+# Using enumerate() to get both index and value
+fruits = ["apple", "banana", "cherry"]
+for index, fruit in enumerate(fruits):
+    print(f"{index}: {fruit}")
 ```
 
 * **While Loop:**
@@ -177,6 +246,65 @@ count = 0
 while count < 5:
     print(count)
     count += 1
+```
+
+#### **Loop Control Statements**
+
+* **`break`** - Exits the loop immediately:
+
+```python
+for i in range(10):
+    if i == 5:
+        break  # Exit loop when i equals 5
+    print(i)  # Prints 0, 1, 2, 3, 4
+```
+
+* **`continue`** - Skips the current iteration and continues with the next:
+
+```python
+for i in range(10):
+    if i % 2 == 0:
+        continue  # Skip even numbers
+    print(i)  # Prints 1, 3, 5, 7, 9
+```
+
+* **`pass`** - Does nothing, used as a placeholder:
+
+```python
+for i in range(5):
+    if i < 3:
+        pass  # Do nothing for i < 3
+    else:
+        print(f"Processing {i}")
+```
+
+#### **Nested Loops**
+
+Loops can be nested inside other loops:
+
+```python
+# Multiplication table
+for i in range(1, 4):
+    for j in range(1, 4):
+        print(f"{i} x {j} = {i*j}")
+    print("---")  # Separator between tables
+```
+
+#### **Loop with `else` Clause**
+
+Python allows an `else` clause with loops that executes when the loop completes normally (not via `break`):
+
+```python
+# Search for a number
+numbers = [1, 3, 5, 7, 9]
+search_for = 4
+
+for num in numbers:
+    if num == search_for:
+        print(f"Found {search_for}!")
+        break
+else:
+    print(f"{search_for} not found in the list")
 ```
 
 ### 🛡️ **Error Handling (Try/Except)**
@@ -381,6 +509,10 @@ tp = ip * q  # Bad
 4. Use a list comprehension to create a list of even numbers from 1 to 20.
 5. Write a function that takes a filename and reads the first line, handling potential file errors.
 6. Create a program that formats today's date in three different ways using f-strings.
+7. Use a `for` loop with `range()` to print the first 10 square numbers (1, 4, 9, 16, ...).
+8. Write a program that uses `break` to find the first number divisible by 7 in a range of 1 to 50.
+9. Create a string and demonstrate at least 5 different string methods on it.
+10. Use string slicing to reverse a word and check if it's a palindrome (reads the same forwards and backwards).
 
 ### 📌 **Summary**
 
@@ -388,6 +520,11 @@ tp = ip * q  # Bad
 * Type conversion helps manage data types effectively.
 * Lists, dictionaries, and sets organize data in different ways.
 * String formatting makes output more readable and flexible.
+* String methods and slicing provide powerful text manipulation tools.
+* Operators include arithmetic, comparison, logical, assignment, membership, and identity types.
+* Control flow uses conditionals, loops, and loop control statements (`break`, `continue`, `pass`).
+* `range()` and `enumerate()` are essential for loop iteration.
+* Nested loops and loop `else` clauses provide advanced control flow options.
 * Error handling makes programs more robust.
 * File handling allows reading and writing data.
 * Functions help reuse code; modules organize functions.
