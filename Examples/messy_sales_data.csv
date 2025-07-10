@@ -1,0 +1,21 @@
+date,product_name,category,price,quantity,customer_id,region
+2024-01-15, iPhone 15 Pro ,Electronics,999.99,2,CUST001,North
+15/02/2024,Samsung Galaxy  ,Electronics,-899.99,1,CUST002,South
+2024-03-10,  MacBook Pro,Electronics,,1,CUST003,East
+04-04-2024,Dell Laptop,Electronics,1299.99,3,CUST004,West
+2024/05/20,Sony Headphones ,Electronics,399.99,2,,North
+30/06/2024,Nike Shoes,Shoes,130.0,1,CUST006,South
+2024-07-15, Adidas Sneakers,Shoes,180.00,4,CUST007,East
+08-08-2024,Coffee Maker,Kitchen,-89.99,1,CUST008,West
+2024/09/25,  Gaming Chair ,Furniture,299.99,2,CUST009,North
+10/10/2024,Office Desk,Furniture,,1,CUST010,South
+2024-11-05,Yoga Mat,Sports,45.00,3,CUST011,East
+15-12-2024,Water Bottle,Sports,24.99,5,CUST012,West
+2024/01/20,Wireless Mouse,Electronics,29.99,10,CUST013,North
+2024-02-25,Keyboard,Electronics,,2,CUST014,South
+03/03/2024, Backpack Travel,Bags,79.99,1,,East
+2024-04-30,Dumbbells,Sports,-199.99,1,CUST016,West
+05/05/2024,Levi Jeans  ,Clothing,79.99,2,CUST017,North
+2024-06-12,Great Gatsby Book,Books,12.99,1,CUST018,South
+07-07-2024,Python Book ,Books,39.99,3,CUST019,East
+2024/08/18,KitchenAid Mixer,Kitchen,349.99,1,CUST020,West 
