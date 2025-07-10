@@ -1,0 +1,4 @@
+title,price,rating,availability,book_url,image_url,category
+A Light in the Attic,£51.77,Three,In stock (22 available),https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html,https://books.toscrape.com/media/cache/2c/da/2cdad67c44b002e7ead0cc35693c0e8b.jpg,Poetry
+Tipping the Velvet,£53.74,One,In stock (20 available),https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html,https://books.toscrape.com/media/cache/26/0c/260c6ae16bce31c8f8c95daddd9f4a1c.jpg,Historical Fiction
+Soumission,£50.10,One,In stock (20 available),https://books.toscrape.com/catalogue/soumission_998/index.html,https://books.toscrape.com/media/cache/3e/ef/3eef99c9d9adef34639f510662022830.jpg,Fiction
